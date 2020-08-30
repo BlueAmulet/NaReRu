@@ -1,0 +1,11 @@
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+Releases/
+Content/Paks/
+Content/Thunder/Level/Thunder/Thunder_Master_BuiltData.uasset
+BuiltData.uasset
+Content/PlaneContents/Level/Plane_BuiltData.uasset
+Content/PlaneContents/Level/Plane_Flight_BuiltData.uasset
+Content/PlaneContents/Level/Plane_Master_BuiltData.uasset
