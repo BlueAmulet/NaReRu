@@ -56,5 +56,10 @@ void APatient_ID::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr R
 		FString str = JsonObject->GetStringField("PatientID");
 		// UE4クライアントにデバッグメッセージを表示
 		GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, str);
+		Response_PatientID = str;
 	}
+}
+
+FString APatient_ID::ResponsePatientID() {
+	return Response_PatientID;
 }

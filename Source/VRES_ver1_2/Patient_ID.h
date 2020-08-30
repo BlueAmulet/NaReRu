@@ -12,6 +12,10 @@ UCLASS()
 class VRES_VER1_2_API APatient_ID : public AActor
 {
 	GENERATED_BODY()
+
+private:
+	UPROPERTY(EditInstanceOnly, Category = "Visible")
+		FString Response_PatientID;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -30,4 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Patient_ID")
 		void GenerateID(FString username);
 		void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+		UFUNCTION(BlueprintCallable, Category = "Patient_ID")
+			FString ResponsePatientID();
 };
