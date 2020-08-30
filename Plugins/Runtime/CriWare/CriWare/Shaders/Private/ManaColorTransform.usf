@@ -1,0 +1,143 @@
+/****************************************************************************
+ *
+ * CRI Middleware SDK
+ *
+ * Copyright (c) 2015-2018 CRI Middleware Co., Ltd.
+ *
+ * Library  : CRIWARE plugin for Unreal Engine 4
+ * Module   : YUVToRGB Color Transform Shader
+ *
+ ****************************************************************************/
+
+#include "/Engine/Private/Common.ush"
+#include "/Engine/Private/GammaCorrectionCommon.ush"
+
+float3 YUVtoRGB_BT601(float y, float u, float v)
+{
+	float3 ret = (float3(y,y,y) - 0.0625f) * 1.164f;
+	ret.r +=               v * 1.596f;
+	ret.g += -u * 0.392f - v * 0.813f;
+	ret.b +=  u * 2.017f;
+
+	return ret;
+}
+
+/* YUVからRGBへ色変換するピクセルシェーダ */
+void PixelShader_YUV_to_RGB(
+	in float2 uv : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+	)
+{
+	float y = ManaUniformBufferYUV.Texture_Y.Sample(ManaUniformBufferYUV.LumaSampler, uv.xy).x;
+	float u = ManaUniformBufferYUV.Texture_U.Sample(ManaUniformBufferYUV.CbSampler, uv.xy).x - 0.5f;
+	float v = ManaUniformBufferYUV.Texture_V.Sample(ManaUniformBufferYUV.CrSampler, uv.xy).x - 0.5f;
+
+	OutColor.rgb = YUVtoRGB_BT601(y, u, v);
+	OutColor.a = 1.0f;
+
+	// Apply "gamma" curve adjustment.
+	if (ManaUniformBufferYUV.GammaCorrection != 1.0f) {
+		OutColor.rgb = pow(OutColor.rgb, ManaUniformBufferYUV.GammaCorrection);
+	}
+	OutColor.rgb = sRGBToLinear(OutColor.rgb);
+}
+
+/* YUVAからRGBAへ色変換するピクセルシェーダ */
+void PixelShader_YUVA_to_RGBA(
+	in float2 uv : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+	)
+{
+	float y = ManaUniformBufferYUVA.Texture_Y.Sample(ManaUniformBufferYUVA.LumaSampler, uv.xy).x;
+	float u = ManaUniformBufferYUVA.Texture_U.Sample(ManaUniformBufferYUVA.CbSampler, uv.xy).x - 0.5f;
+	float v = ManaUniformBufferYUVA.Texture_V.Sample(ManaUniformBufferYUVA.CrSampler, uv.xy).x - 0.5f;
+	float a = ManaUniformBufferYUVA.Texture_A.Sample(ManaUniformBufferYUVA.AlphaSampler, uv.xy).x;
+
+	OutColor.rgb = YUVtoRGB_BT601(y, u, v);
+	OutColor.a = a;
+
+	// Apply "gamma" curve adjustment.
+	if (ManaUniformBufferYUVA.GammaCorrection != 1.0f) {
+		OutColor.rgb = pow(OutColor.rgb, ManaUniformBufferYUVA.GammaCorrection);
+	}
+	OutColor.rgb = sRGBToLinear(OutColor.rgb);
+}
+
+void PixelShader_NV12_to_RGB(
+	in float2 uv : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+	)
+{
+	float y = ManaUniformBufferNV12.Texture_Y.Sample(ManaUniformBufferNV12.LumaSampler, uv.xy).x;
+	float2 chr = ManaUniformBufferNV12.Texture_UV.Sample(ManaUniformBufferNV12.CbCrSampler, uv.xy).xy - 0.5f;
+
+	OutColor.rgb = YUVtoRGB_BT601(y, chr.x, chr.y);
+	OutColor.a = 1.0f;
+
+	// Apply "gamma" curve adjustment.
+	if (ManaUniformBufferNV12.GammaCorrection != 1.0f) {
+		OutColor.rgb = pow(OutColor.rgb, ManaUniformBufferNV12.GammaCorrection);
+	}
+	OutColor.rgb = sRGBToLinear(OutColor.rgb);
+}
+
+void PixelShader_NV12A_to_RGBA(
+	in float2 uv : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+	)
+{
+	float y = ManaUniformBufferNV12A.Texture_Y.Sample(ManaUniformBufferNV12A.LumaSampler, uv.xy).x;
+	float2 chr = ManaUniformBufferNV12A.Texture_UV.Sample(ManaUniformBufferNV12A.CbCrSampler, uv.xy).xy - 0.5f;
+	float a = ManaUniformBufferNV12A.Texture_A.Sample(ManaUniformBufferNV12A.AlphaSampler, uv.xy).x;
+
+	OutColor.rgb = YUVtoRGB_BT601(y, chr.x, chr.y);
+	OutColor.a = a;
+
+	// Apply "gamma" curve adjustment.
+	if (ManaUniformBufferNV12A.GammaCorrection != 1.0f) {
+		OutColor.rgb = pow(OutColor.rgb, ManaUniformBufferNV12A.GammaCorrection);
+	}
+	OutColor.rgb = sRGBToLinear(OutColor.rgb);
+}
+
+void PixelShader_RGB_to_RGB(
+	in float2 uv : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+	)
+{
+	OutColor.rgb = ManaUniformBufferRGB.Texture_RGB.Sample(ManaUniformBufferRGB.ColorSampler, uv.xy).rgb;
+	OutColor.a = 1.0f;
+
+	// Apply "gamma" curve adjustment.
+	if (ManaUniformBufferRGB.GammaCorrection != 1.0f) {
+		OutColor.rgb = pow(OutColor.rgb, ManaUniformBufferRGB.GammaCorrection);
+	}
+	OutColor.rgb = sRGBToLinear(OutColor.rgb);
+}
+
+void PixelShader_RGBA_to_RGBA(
+	in float2 uv : TEXCOORD0,
+	out float4 OutColor : SV_Target0
+	)
+{
+	OutColor.rgb = ManaUniformBufferRGBA.Texture_RGB.Sample(ManaUniformBufferRGBA.ColorSampler, uv.xy).rgb;
+	OutColor.a = ManaUniformBufferRGBA.Texture_A.Sample(ManaUniformBufferRGBA.AlphaSampler, uv.xy).x;
+
+	// Apply "gamma" curve adjustment.
+	if (ManaUniformBufferRGBA.GammaCorrection != 1.0f) {
+		OutColor.rgb = pow(OutColor.rgb, ManaUniformBufferRGBA.GammaCorrection);
+	}
+	OutColor.rgb = sRGBToLinear(OutColor.rgb);
+}
+
+/* 頂点情報をパススルーするだけの頂点シェーダ */
+void MainVertexShader(
+	float4 InPosition : ATTRIBUTE0,
+	float2 InUV : ATTRIBUTE1,
+	out float2 OutUV : TEXCOORD0,
+	out float4 OutPosition : SV_POSITION
+	)
+{
+	OutPosition = InPosition;
+	OutUV = InUV;
+}
