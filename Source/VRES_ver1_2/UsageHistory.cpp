@@ -24,9 +24,8 @@ void AUsageHistory::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-void AUsageHistory::Test_History(FString companyid, FString patientid) {
+void AUsageHistory::Test_History(FString patientid) {
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
-	JsonObject->SetStringField("CompanyID", companyid);
 	JsonObject->SetStringField("PatientID", patientid);
 
 	// OutputString
@@ -49,4 +48,39 @@ void AUsageHistory::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 
+	if (FJsonSerializer::Deserialize(Reader, JsonObject)) {
+		//ç≈èIìIÇ»ãZèpìIïsà¿ì_
+		
+		for (int32 i = 0; i < 32;i++) {
+			FString str_i = FString::FromInt(i);
+			TSharedPtr<FJsonObject> array = JsonObject->GetObjectField(str_i);
+			FString res_content = *array->GetStringField(TEXT("PlayContent"));
+			FString res_time = *array->GetStringField(TEXT("PlayTime"));
+			FString res_suds = *array->GetStringField(TEXT("PlaySUDs"));
+			FString res_date = *array->GetStringField(TEXT("Date"));
+			//UPROPERTYÇ÷ÉçÉOÇäiî[
+			prop_content = res_content;
+			prop_time = res_time;
+			prop_suds = res_suds;
+			prop_date = res_date;
+
+			if (prop_content == "" || prop_time == "" || prop_suds == "" || prop_date == "") {
+				break;
+			}
+
+			array_str.Add(prop_content);
+			array_str.Add(prop_time);
+			array_str.Add(prop_suds);
+			array_str.Add(prop_date);
+			GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, res_content);
+		}
+
+		
+	}
+
+}
+
+TArray<FString> AUsageHistory::ArrayResponseLog() {
+	TArray<FString> array = { "a","b","c","d","e" };
+	return array_str;
 }

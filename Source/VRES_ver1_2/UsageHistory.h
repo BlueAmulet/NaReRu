@@ -13,6 +13,14 @@ UCLASS()
 class VRES_VER1_2_API AUsageHistory : public AActor
 {
 	GENERATED_BODY()
+
+private:
+	UPROPERTY(EditInstanceOnly, Category = Visible)
+		FString prop_content;
+	FString prop_time;
+	FString prop_suds;
+	FString prop_date;
+	TArray<FString> array_str;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -29,7 +37,10 @@ public:
 	FHttpModule* Http;
 	//HttpMethod
 	UFUNCTION(BlueprintCallable, Category = "UsageHistory")
-		void Test_History(FString companyid,FString patientid);
+		void Test_History(FString patientid);
 		void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	UFUNCTION(BlueprintCallable = "UsageHistory")
+		TArray<FString> ArrayResponseLog();
 
 };
