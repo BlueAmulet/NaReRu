@@ -32,9 +32,9 @@ void AResult_Log::SendResult_Log(FString username,FString patient_id, FString co
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField("UserName", username);
 	JsonObject->SetStringField("PatientID", patient_id);
-	JsonObject->SetStringField("PlayContents", contentsname);
-	JsonObject->SetStringField("PlaySud", sudslog);
-	JsonObject->SetStringField("PlayTime", time);
+	JsonObject->SetStringField("PlayContent", contentsname);
+	JsonObject->SetStringField("PlaySUDs", sudslog);
+	JsonObject->SetStringField("PlayTimes", time);
 
 	// OutputString
 	FString OutputString;
@@ -44,7 +44,7 @@ void AResult_Log::SendResult_Log(FString username,FString patient_id, FString co
 	//Http
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &AResult_Log::OnResponseReceived);
-	Request->SetURL("https://virtual-reality-exposure-system.com/Release/Result/test.php");//Œã‚Å•ÏX
+	Request->SetURL("https://virtual-reality-exposure-system.com/test/test_Result.php");//Œã‚Å•ÏX
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
