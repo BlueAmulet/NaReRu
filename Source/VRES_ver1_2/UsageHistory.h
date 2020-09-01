@@ -37,7 +37,7 @@ public:
 	FHttpModule* Http;
 	//HttpMethod
 	UFUNCTION(BlueprintCallable, Category = "UsageHistory")
-		void Test_History(FString patientid);
+		void Test_History(FString patientid, FString username);
 		void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	UFUNCTION(BlueprintCallable = "UsageHistory")

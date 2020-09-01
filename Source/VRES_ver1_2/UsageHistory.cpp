@@ -24,9 +24,10 @@ void AUsageHistory::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-void AUsageHistory::Test_History(FString patientid) {
+void AUsageHistory::Test_History(FString patientid, FString username) {
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField("PatientID", patientid);
+	JsonObject->SetStringField("UserName", username);
 
 	// OutputString
 	FString OutputString;
