@@ -30,7 +30,7 @@ void ALogin::SendMethod(FString userid, FString password)
 	//Http
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ALogin::OnResponseReceived);
-	Request->SetURL("https://virtual-reality-exposure-system.com/Release/login/login_check.php");//Œã‚Å•ÏX
+	Request->SetURL("https://virtual-reality-exposure-system.com/Release/login/login.php");//Œã‚Å•ÏX
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
