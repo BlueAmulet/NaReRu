@@ -32,6 +32,11 @@
 			"Name": "HttpDownLoadFile",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/62cf5fde5f734196b42cdee03c44912c"
+		},
+		{
+			"Name": "UIWS",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/97ef36447df7427ca9b46edf1a438731"
 		}
 	]
 }
