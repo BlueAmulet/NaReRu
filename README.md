@@ -1,2 +1,2 @@
-# NaReRu_v1.2.1
-NaReRu_v1.2.1
+# NaReRu_1.3.0
+NaReRu_v1.3.0
